@@ -1,0 +1,70 @@
+# api + worker (+ dashboard) sharing one SQLite database and the models directory.
+#
+#   docker compose up -d --build                          # normal mode (15% verified)
+#   AUTOPILOT_MODE=evaluation docker compose up -d        # verify every request (load tests)
+#
+# Ollama runs on the host machine; containers reach it through host.docker.internal.
+
+name: llm-cost-autopilot
+
+x-app: &app
+  build: .
+  image: llm-cost-autopilot:latest
+  env_file:
+    - path: .env            # DEEPSEEK_API_KEY, OLLAMA_MODEL, DEEPSEEK_PRO_THINKING
+      required: false
+  environment:
+    OLLAMA_BASE_URL: http://host.docker.internal:11434/v1   # overrides the host value in .env
+    AUTOPILOT_DB_PATH: /app/var/autopilot.db
+    AUTOPILOT_MODE: ${AUTOPILOT_MODE:-normal}
+    ESCALATION_MODE: ${ESCALATION_MODE:-async}
+    VERIFY_SAMPLE_RATE: ${VERIFY_SAMPLE_RATE:-}
+    WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-3}
+    AUTOPILOT_API_KEY: ${AUTOPILOT_API_KEY:-}
+  extra_hosts:
+    - "host.docker.internal:host-gateway"   # needed on Linux; built in on Docker Desktop
+  volumes:
+    # SQLite in WAL mode needs reliable locks + shared memory: keep it on a Docker volume
+    # (Linux filesystem inside Docker), NOT on a macOS bind mount.
+    - autopilot-db:/app/var
+    # Classifier versions + registry, shared with the host (retraining updates them).
+    - ./models:/app/models
+    # Labels, test split and load-test prompts (read by retrain.py).
+    - ./data:/app/data
+
+services:
+  api:
+    <<: *app
+    command: ["uvicorn", "autopilot.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+    restart: unless-stopped
+
+  worker:
+    <<: *app
+    command: ["python", "scripts/worker.py"]
+    depends_on:
+      api:
+        condition: service_healthy   # api creates the schema first
+    restart: unless-stopped
+    stop_grace_period: 60s           # lets the current batch finish on SIGTERM
+
+  dashboard:
+    <<: *app
+    command: ["streamlit", "run", "src/autopilot/dashboard/app.py", "--server.port", "8501",
+              "--server.address", "0.0.0.0", "--server.headless", "true", "--browser.gatherUsageStats", "false"]
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  autopilot-db:

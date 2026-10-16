@@ -1,0 +1,586 @@
+{
+  "version": "v2",
+  "created_at": "2026-10-16T10:35:59.926463Z",
+  "model_kind": "random_forest+tfidf_hc",
+  "training_size": 254,
+  "test_size": 42,
+  "label_files": {
+    "data/labeled_prompts_v2.jsonl": "049c8c862524973e85775c9608b9030d4d3424951421a4f002291442fbb91a94"
+  },
+  "test_split_file": "data/test_split.json",
+  "sklearn_version": "1.9.1",
+  "python_version": "3.14.6",
+  "metrics": {
+    "selected": {
+      "kind": "random_forest",
+      "features": "tfidf_hc"
+    },
+    "selection_reason": "highest CV Tier-3 recall among models with CV accuracy ≥ 70%",
+    "cv": {
+      "logistic_regression+tfidf_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.7128627450980393,
+        "accuracy_std": 0.05793758988269052,
+        "macro_f1_mean": 0.6976439814607203,
+        "tier3_recall_mean": 0.7454545454545455,
+        "tier3_recall_std": 0.06803013430498078,
+        "under_routing_mean": 0.12196078431372548,
+        "over_routing_mean": 0.1651764705882353
+      },
+      "random_forest+tfidf_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.7087058823529413,
+        "accuracy_std": 0.05710881173966092,
+        "macro_f1_mean": 0.6875952740879796,
+        "tier3_recall_mean": 0.7636363636363637,
+        "tier3_recall_std": 0.12331509060227762,
+        "under_routing_mean": 0.13372549019607843,
+        "over_routing_mean": 0.15756862745098038
+      },
+      "logistic_regression+embed_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.7049411764705882,
+        "accuracy_std": 0.06479855514548694,
+        "macro_f1_mean": 0.6875655226933965,
+        "tier3_recall_mean": 0.7272727272727273,
+        "tier3_recall_std": 0.09958591954639387,
+        "under_routing_mean": 0.12188235294117647,
+        "over_routing_mean": 0.17317647058823532
+      },
+      "random_forest+embed_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.6650980392156863,
+        "accuracy_std": 0.06708519146774304,
+        "macro_f1_mean": 0.6198909224863229,
+        "tier3_recall_mean": 0.509090909090909,
+        "tier3_recall_std": 0.09270944570168699,
+        "under_routing_mean": 0.21254901960784314,
+        "over_routing_mean": 0.1223529411764706
+      },
+      "logistic_regression+embed_hc_tfidf": {
+        "folds": 5,
+        "accuracy_mean": 0.7089411764705883,
+        "accuracy_std": 0.06745025079404768,
+        "macro_f1_mean": 0.693713643692649,
+        "tier3_recall_mean": 0.7272727272727273,
+        "tier3_recall_std": 0.0813115628181742,
+        "under_routing_mean": 0.12980392156862747,
+        "over_routing_mean": 0.16125490196078432
+      }
+    },
+    "test": {
+      "n": 42,
+      "accuracy": 0.7857142857142857,
+      "macro_f1": 0.7870370370370371,
+      "per_tier": {
+        "1": {
+          "precision": 0.8235294117647058,
+          "recall": 0.7368421052631579,
+          "f1": 0.7777777777777778,
+          "support": 19
+        },
+        "2": {
+          "precision": 0.75,
+          "recall": 0.75,
+          "f1": 0.75,
+          "support": 12
+        },
+        "3": {
+          "precision": 0.7692307692307693,
+          "recall": 0.9090909090909091,
+          "f1": 0.8333333333333334,
+          "support": 11
+        }
+      },
+      "confusion_matrix": [
+        [
+          14,
+          3,
+          2
+        ],
+        [
+          2,
+          9,
+          1
+        ],
+        [
+          1,
+          0,
+          10
+        ]
+      ],
+      "under_routing_rate": 0.07142857142857142,
+      "severe_under_routing": 1,
+      "over_routing_rate": 0.14285714285714285
+    },
+    "test_errors": [
+      {
+        "candidate_id": "c0074",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.49,
+        "prompt_preview": "Extract the names of the ramen. separate them with comma. Context: Shio (塩, 'salt') ramen is the oldest of the four type"
+      },
+      {
+        "candidate_id": "c0179",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.516,
+        "prompt_preview": "Draft an e-mail to a resort inquiring about information regarding a vow renewal celebration for my wife and me."
+      },
+      {
+        "candidate_id": "c0099",
+        "true_tier": 1,
+        "predicted_tier": 3,
+        "confidence": 0.497,
+        "prompt_preview": "What is it like to have children and how many should I have?"
+      },
+      {
+        "candidate_id": "c0141",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.615,
+        "prompt_preview": "From the text, please extract and list Nokia's market capitalization timeline. Context: Nokia is a public limited liabil"
+      },
+      {
+        "candidate_id": "c0156",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.461,
+        "prompt_preview": "Extract the current cash rate and basis point increase from the following using the format: {x} % increased by {x} basis"
+      },
+      {
+        "candidate_id": "c0004",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.546,
+        "prompt_preview": "Is organic food healthier?"
+      },
+      {
+        "candidate_id": "c0166",
+        "true_tier": 1,
+        "predicted_tier": 3,
+        "confidence": 0.41,
+        "prompt_preview": "Think of a bunch of ways that you could clean a house."
+      },
+      {
+        "candidate_id": "c0174",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.479,
+        "prompt_preview": "Name some famous anime shows?"
+      },
+      {
+        "candidate_id": "c0051",
+        "true_tier": 3,
+        "predicted_tier": 1,
+        "confidence": 0.462,
+        "prompt_preview": "Are large language models actually smart like humans?"
+      }
+    ],
+    "test_other_models": {
+      "logistic_regression+tfidf_hc": {
+        "n": 42,
+        "accuracy": 0.7619047619047619,
+        "macro_f1": 0.764979524979525,
+        "per_tier": {
+          "1": {
+            "precision": 0.7777777777777778,
+            "recall": 0.7368421052631579,
+            "f1": 0.7567567567567568,
+            "support": 19
+          },
+          "2": {
+            "precision": 0.6923076923076923,
+            "recall": 0.75,
+            "f1": 0.72,
+            "support": 12
+          },
+          "3": {
+            "precision": 0.8181818181818182,
+            "recall": 0.8181818181818182,
+            "f1": 0.8181818181818182,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            14,
+            4,
+            1
+          ],
+          [
+            2,
+            9,
+            1
+          ],
+          [
+            2,
+            0,
+            9
+          ]
+        ],
+        "under_routing_rate": 0.09523809523809523,
+        "severe_under_routing": 2,
+        "over_routing_rate": 0.14285714285714285
+      },
+      "logistic_regression+embed_hc": {
+        "n": 42,
+        "accuracy": 0.7142857142857143,
+        "macro_f1": 0.7257187257187258,
+        "per_tier": {
+          "1": {
+            "precision": 0.7058823529411765,
+            "recall": 0.631578947368421,
+            "f1": 0.6666666666666666,
+            "support": 19
+          },
+          "2": {
+            "precision": 0.6428571428571429,
+            "recall": 0.75,
+            "f1": 0.6923076923076923,
+            "support": 12
+          },
+          "3": {
+            "precision": 0.8181818181818182,
+            "recall": 0.8181818181818182,
+            "f1": 0.8181818181818182,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            12,
+            5,
+            2
+          ],
+          [
+            3,
+            9,
+            0
+          ],
+          [
+            2,
+            0,
+            9
+          ]
+        ],
+        "under_routing_rate": 0.11904761904761904,
+        "severe_under_routing": 2,
+        "over_routing_rate": 0.16666666666666666
+      },
+      "random_forest+embed_hc": {
+        "n": 42,
+        "accuracy": 0.7142857142857143,
+        "macro_f1": 0.7099919051138563,
+        "per_tier": {
+          "1": {
+            "precision": 0.6818181818181818,
+            "recall": 0.7894736842105263,
+            "f1": 0.7317073170731707,
+            "support": 19
+          },
+          "2": {
+            "precision": 0.7,
+            "recall": 0.5833333333333334,
+            "f1": 0.6363636363636364,
+            "support": 12
+          },
+          "3": {
+            "precision": 0.8,
+            "recall": 0.7272727272727273,
+            "f1": 0.7619047619047619,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            15,
+            3,
+            1
+          ],
+          [
+            4,
+            7,
+            1
+          ],
+          [
+            3,
+            0,
+            8
+          ]
+        ],
+        "under_routing_rate": 0.16666666666666666,
+        "severe_under_routing": 3,
+        "over_routing_rate": 0.11904761904761904
+      },
+      "logistic_regression+embed_hc_tfidf": {
+        "n": 42,
+        "accuracy": 0.7380952380952381,
+        "macro_f1": 0.7442372442372442,
+        "per_tier": {
+          "1": {
+            "precision": 0.7647058823529411,
+            "recall": 0.6842105263157895,
+            "f1": 0.7222222222222222,
+            "support": 19
+          },
+          "2": {
+            "precision": 0.6428571428571429,
+            "recall": 0.75,
+            "f1": 0.6923076923076923,
+            "support": 12
+          },
+          "3": {
+            "precision": 0.8181818181818182,
+            "recall": 0.8181818181818182,
+            "f1": 0.8181818181818182,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            13,
+            5,
+            1
+          ],
+          [
+            2,
+            9,
+            1
+          ],
+          [
+            2,
+            0,
+            9
+          ]
+        ],
+        "under_routing_rate": 0.09523809523809523,
+        "severe_under_routing": 2,
+        "over_routing_rate": 0.16666666666666666
+      }
+    },
+    "threshold_table": [
+      {
+        "threshold": 0.0,
+        "routed_up_rate": 0.0,
+        "accuracy": 0.7086614173228346,
+        "under_routing_rate": 0.13385826771653545,
+        "over_routing_rate": 0.15748031496062992,
+        "tier3_recall": 0.7636363636363637,
+        "tier_share": {
+          "1": 0.5118110236220472,
+          "2": 0.22440944881889763,
+          "3": 0.2637795275590551
+        }
+      },
+      {
+        "threshold": 0.4,
+        "routed_up_rate": 0.03543307086614173,
+        "accuracy": 0.7165354330708661,
+        "under_routing_rate": 0.1141732283464567,
+        "over_routing_rate": 0.16929133858267717,
+        "tier3_recall": 0.8181818181818182,
+        "tier_share": {
+          "1": 0.49606299212598426,
+          "2": 0.2204724409448819,
+          "3": 0.28346456692913385
+        }
+      },
+      {
+        "threshold": 0.45,
+        "routed_up_rate": 0.06692913385826772,
+        "accuracy": 0.7047244094488189,
+        "under_routing_rate": 0.11023622047244094,
+        "over_routing_rate": 0.18503937007874016,
+        "tier3_recall": 0.8181818181818182,
+        "tier_share": {
+          "1": 0.48031496062992124,
+          "2": 0.2204724409448819,
+          "3": 0.2992125984251969
+        }
+      },
+      {
+        "threshold": 0.5,
+        "routed_up_rate": 0.16535433070866143,
+        "accuracy": 0.6771653543307087,
+        "under_routing_rate": 0.08661417322834646,
+        "over_routing_rate": 0.23622047244094488,
+        "tier3_recall": 0.8181818181818182,
+        "tier_share": {
+          "1": 0.4094488188976378,
+          "2": 0.2637795275590551,
+          "3": 0.32677165354330706
+        }
+      },
+      {
+        "threshold": 0.55,
+        "routed_up_rate": 0.23622047244094488,
+        "accuracy": 0.6338582677165354,
+        "under_routing_rate": 0.07874015748031496,
+        "over_routing_rate": 0.2874015748031496,
+        "tier3_recall": 0.8181818181818182,
+        "tier_share": {
+          "1": 0.35039370078740156,
+          "2": 0.3110236220472441,
+          "3": 0.33858267716535434
+        }
+      },
+      {
+        "threshold": 0.6,
+        "routed_up_rate": 0.33070866141732286,
+        "accuracy": 0.6023622047244095,
+        "under_routing_rate": 0.051181102362204724,
+        "over_routing_rate": 0.3464566929133858,
+        "tier3_recall": 0.8363636363636363,
+        "tier_share": {
+          "1": 0.2755905511811024,
+          "2": 0.3661417322834646,
+          "3": 0.35826771653543305
+        }
+      },
+      {
+        "threshold": 0.65,
+        "routed_up_rate": 0.44881889763779526,
+        "accuracy": 0.5196850393700787,
+        "under_routing_rate": 0.04330708661417323,
+        "over_routing_rate": 0.43700787401574803,
+        "tier3_recall": 0.8363636363636363,
+        "tier_share": {
+          "1": 0.1889763779527559,
+          "2": 0.421259842519685,
+          "3": 0.38976377952755903
+        }
+      },
+      {
+        "threshold": 0.7,
+        "routed_up_rate": 0.5275590551181102,
+        "accuracy": 0.4448818897637795,
+        "under_routing_rate": 0.04330708661417323,
+        "over_routing_rate": 0.5118110236220472,
+        "tier3_recall": 0.8363636363636363,
+        "tier_share": {
+          "1": 0.12992125984251968,
+          "2": 0.46062992125984253,
+          "3": 0.4094488188976378
+        }
+      }
+    ],
+    "task_type_test_accuracy": 0.6666666666666666,
+    "top_features": {
+      "1": [
+        [
+          "tfidf:what",
+          0.739
+        ],
+        [
+          "tfidf:was",
+          0.589
+        ],
+        [
+          "tfidf:music",
+          0.546
+        ],
+        [
+          "tfidf:at",
+          0.503
+        ],
+        [
+          "hc:has_context",
+          0.479
+        ],
+        [
+          "tfidf:who",
+          0.431
+        ],
+        [
+          "tfidf:extract",
+          0.429
+        ],
+        [
+          "hc:lookup_verbs",
+          0.396
+        ]
+      ],
+      "2": [
+        [
+          "tfidf:poem",
+          0.917
+        ],
+        [
+          "tfidf:he",
+          0.619
+        ],
+        [
+          "tfidf:list",
+          0.587
+        ],
+        [
+          "tfidf:few things",
+          0.579
+        ],
+        [
+          "tfidf:old",
+          0.532
+        ],
+        [
+          "tfidf:things",
+          0.523
+        ],
+        [
+          "tfidf:to do",
+          0.523
+        ],
+        [
+          "tfidf:classify",
+          0.466
+        ]
+      ],
+      "3": [
+        [
+          "tfidf:why",
+          0.84
+        ],
+        [
+          "tfidf:how",
+          0.776
+        ],
+        [
+          "tfidf:and",
+          0.757
+        ],
+        [
+          "tfidf:up",
+          0.689
+        ],
+        [
+          "tfidf:how much",
+          0.609
+        ],
+        [
+          "tfidf:much",
+          0.609
+        ],
+        [
+          "tfidf:my",
+          0.604
+        ],
+        [
+          "tfidf:is",
+          0.571
+        ]
+      ]
+    },
+    "training_size": 254,
+    "test_size": 42,
+    "tier_counts_train": {
+      "1": 132,
+      "2": 67,
+      "3": 55
+    },
+    "split_created": false,
+    "test_ids_missing": [
+      "c0067"
+    ]
+  }
+}

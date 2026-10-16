@@ -1,0 +1,53 @@
+# Runtime knobs. Later phases add verification and routing settings here.
+
+client:
+  # Max in-flight requests per provider. Ollama gets its own, lower limit:
+  # a 3B model on a laptop slows down for everyone when you run many at once.
+  concurrency_default: 5
+  concurrency_per_provider:
+    ollama: 2
+  # Retries with exponential backoff + jitter, only for transient errors
+  # (rate limits, timeouts, connection errors, 5xx). Never for 4xx.
+  max_attempts: 4
+  backoff_base_s: 1.0
+  backoff_max_s: 30.0
+  request_timeout_s: 120.0
+  # Cost guard: hard cap on output tokens for every call.
+  max_output_tokens: 2048
+
+embeddings:
+  # Local Ollama embedding model used by the classifier (`ollama pull nomic-embed-text`).
+  base_url: ${OLLAMA_BASE_URL:-http://localhost:11434/v1}
+  timeout_s: 30.0
+  batch_size: 32
+  # Embeddings are cached so training/cross-validation never embeds the same prompt twice.
+  cache_path: data/raw/embedding_cache.sqlite
+
+database:
+  # Shared by API, worker and dashboard. In Docker this points at the shared volume.
+  path: ${AUTOPILOT_DB_PATH:-data/autopilot.db}
+
+verification:
+  # normal: verify a random sample of requests. evaluation: verify everything (load tests).
+  mode: ${AUTOPILOT_MODE:-normal}
+  # Verifying = one extra Tier-3 call + one judge call per request. At 100% that can cost
+  # more than routing saves, so production samples. Verification cost is ALWAYS reported.
+  sample_rate_normal: 0.15
+  sample_rate_evaluation: 1.0
+  sample_rate_override: ${VERIFY_SAMPLE_RATE:-}   # set to force a rate in any mode
+  # async: respond immediately, verify later, log failures.
+  # sync:  for low-confidence requests, get the Tier-3 answer + judge BEFORE responding,
+  #        and return the Tier-3 answer if the routed one fails.
+  escalation_mode: ${ESCALATION_MODE:-async}
+  sync_confidence_below: 0.5
+  judge_max_tokens: 400
+  worker_concurrency: ${WORKER_CONCURRENCY:-3}
+  worker_poll_interval_s: 1.0
+  job_max_attempts: 3
+  job_visibility_timeout_s: 600
+
+api:
+  max_messages: 50
+  max_total_chars: 24000        # rejects oversized requests before any model call
+  max_tokens_cap: 4096          # upper bound a caller may request
+  api_key: ${AUTOPILOT_API_KEY:-}   # set to require 'Authorization: Bearer <key>'

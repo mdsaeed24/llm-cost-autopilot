@@ -1,0 +1,19 @@
+# Which model serves each complexity tier. Model names come from config/models.yaml.
+# Edit freely — no code changes needed (the API can also update this at runtime in Phase 5).
+tiers:
+  1: local-llama
+  2: deepseek-flash
+  3: deepseek-v4-pro
+
+# Safe default: when the classifier is unsure, pay a bit more rather than risk quality.
+# If the top-class probability is below `threshold`, route ONE tier up (tier 3 stays tier 3).
+confidence:
+  enabled: true
+  threshold: 0.50
+
+# If the classifier itself fails (e.g. Ollama's embedding model is down), use this tier.
+# Tier 3 = never risk quality; it costs more only while the classifier is unavailable.
+fallback_tier: 3
+
+# "current" = the promoted model in models/registry.json; or pin a version, e.g. "v1".
+classifier_version: current

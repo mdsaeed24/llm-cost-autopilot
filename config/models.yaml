@@ -1,0 +1,59 @@
+# Model catalogue. Every price is USD per 1M tokens.
+#
+# DeepSeek prices are PEAK prices (checked 2026-10-14 at
+# https://api-docs.deepseek.com/quick_start/pricing). We report every cost at
+# peak on purpose: it is a conservative, upper-bound estimate. Off-peak is
+# 50% cheaper, see price_schedule below.
+#
+# ${VAR:-default} is replaced from the environment when the file is loaded.
+
+price_schedule:
+  provider: deepseek
+  timezone: UTC
+  peak_weekdays: [mon, tue, wed, thu, fri]
+  peak_windows: ["01:00-04:00", "06:00-10:00"]
+  off_peak_multiplier: 0.5
+  note: "Chinese public holidays are fully off-peak; not modelled here."
+
+models:
+  local-llama:
+    provider: ollama
+    model_id: ${OLLAMA_MODEL:-llama3.2:3b}
+    base_url: ${OLLAMA_BASE_URL:-http://localhost:11434/v1}
+    api_key_env: null            # Ollama ignores the key; any string works
+    quality_tier: low
+    typical_latency_ms: 4000     # laptop CPU/GPU, varies a lot with hardware
+    pricing:
+      input_cache_miss_per_1m: 0.0
+      input_cache_hit_per_1m: 0.0
+      output_per_1m: 0.0
+    thinking: null               # no thinking toggle for this provider
+
+  deepseek-flash:
+    provider: deepseek
+    model_id: deepseek-flash
+    base_url: https://api.deepseek.com
+    api_key_env: DEEPSEEK_API_KEY
+    quality_tier: medium
+    typical_latency_ms: 3000
+    pricing:
+      input_cache_miss_per_1m: 0.30
+      input_cache_hit_per_1m: 0.006
+      output_per_1m: 1.20
+    thinking:
+      enabled: false             # thinking is ON by default at DeepSeek, so we always send this explicitly
+
+  deepseek-v4-pro:
+    provider: deepseek
+    model_id: deepseek-v4-pro
+    base_url: https://api.deepseek.com
+    api_key_env: DEEPSEEK_API_KEY
+    quality_tier: high
+    typical_latency_ms: 8000
+    pricing:
+      input_cache_miss_per_1m: 1.32
+      input_cache_hit_per_1m: 0.044
+      output_per_1m: 3.96
+    thinking:
+      enabled: ${DEEPSEEK_PRO_THINKING:-false}
+      reasoning_effort: high     # only sent when enabled (low | high | max)

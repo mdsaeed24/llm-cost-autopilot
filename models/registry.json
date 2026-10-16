@@ -1,0 +1,15 @@
+{
+  "current": "v2",
+  "history": [
+    {
+      "version": "v1",
+      "promoted_at": "2026-10-16T05:51:08.817718Z",
+      "reason": "first trained model"
+    },
+    {
+      "version": "v2",
+      "promoted_at": "2026-10-16T10:36:00.004368Z",
+      "reason": "not worse: Tier-3 recall 36% → 91%, accuracy 45% → 79%"
+    }
+  ]
+}

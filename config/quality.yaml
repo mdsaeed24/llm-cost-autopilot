@@ -1,0 +1,36 @@
+# What "good enough" means per task type. The judge (an LLM) rates the routed answer and the
+# Tier-3 reference answer separately on the criterion below, WITHOUT being told which is which.
+# agreement = 5 - max(0, reference_score - routed_score)   (routed better or equal → 5)
+# A routed answer passes if agreement >= pass_threshold; otherwise it is a routing failure.
+
+judge_model: deepseek-v4-pro          # model name from config/models.yaml
+# Use a rule only when the task-type classifier is at least this confident; else `default`.
+min_task_confidence: 0.5
+
+rules:
+  extraction_reformatting:
+    criterion: >-
+      Every key fact or field that the request asks for is present and correct,
+      nothing is invented, and the requested output format is followed exactly.
+    pass_threshold: 4
+  qa_classification:
+    criterion: >-
+      The final answer or label is correct. Only the final answer/label matters —
+      not length, style or extra explanation.
+    pass_threshold: 4
+  summarization_analysis:
+    criterion: >-
+      Covers the main points the request needs, with no factual errors or invented
+      details, and follows any requested length or structure.
+    pass_threshold: 4
+  reasoning_creative:
+    criterion: >-
+      For reasoning: the reasoning is sound and the final conclusion or number is correct.
+      For creative or advice tasks: every explicit constraint in the request is met and the
+      response is thoughtful and useful.
+    pass_threshold: 4
+
+default:
+  criterion: >-
+    The answer is correct, complete and genuinely useful for the request.
+  pass_threshold: 4

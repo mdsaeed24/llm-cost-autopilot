@@ -1,0 +1,457 @@
+{
+  "version": "v1",
+  "created_at": "2026-10-16T05:51:08.813512Z",
+  "model_kind": "logistic_regression",
+  "training_size": 172,
+  "test_size": 43,
+  "label_files": {
+    "data/labeled_prompts.jsonl": "659b4cac780b1d4f8c974da1eb2f0f92aca7eb98ca9e7bba19ddab067f5c4f51"
+  },
+  "test_split_file": "data/test_split.json",
+  "sklearn_version": "1.9.1",
+  "python_version": "3.14.6",
+  "metrics": {
+    "selected_kind": "logistic_regression",
+    "selection_reason": "no model reached CV accuracy 70%; chose highest accuracy",
+    "cv": {
+      "logistic_regression": {
+        "folds": 5,
+        "accuracy_mean": 0.5458823529411765,
+        "accuracy_std": 0.048932102769542296,
+        "macro_f1_mean": 0.5376988501694384,
+        "tier3_recall_mean": 0.4288888888888889,
+        "tier3_recall_std": 0.13251601347444952,
+        "under_routing_mean": 0.24403361344537813,
+        "over_routing_mean": 0.21008403361344538
+      },
+      "random_forest": {
+        "folds": 5,
+        "accuracy_mean": 0.5228571428571429,
+        "accuracy_std": 0.08599952539024236,
+        "macro_f1_mean": 0.5189823633439195,
+        "tier3_recall_mean": 0.47111111111111115,
+        "tier3_recall_std": 0.10854821992728722,
+        "under_routing_mean": 0.25546218487394956,
+        "over_routing_mean": 0.22168067226890759
+      }
+    },
+    "test": {
+      "n": 43,
+      "accuracy": 0.6511627906976745,
+      "macro_f1": 0.6539682539682539,
+      "per_tier": {
+        "1": {
+          "precision": 0.625,
+          "recall": 0.7142857142857143,
+          "f1": 0.6666666666666666,
+          "support": 14
+        },
+        "2": {
+          "precision": 0.6111111111111112,
+          "recall": 0.6470588235294118,
+          "f1": 0.6285714285714286,
+          "support": 17
+        },
+        "3": {
+          "precision": 0.7777777777777778,
+          "recall": 0.5833333333333334,
+          "f1": 0.6666666666666666,
+          "support": 12
+        }
+      },
+      "confusion_matrix": [
+        [
+          10,
+          4,
+          0
+        ],
+        [
+          4,
+          11,
+          2
+        ],
+        [
+          2,
+          3,
+          7
+        ]
+      ],
+      "under_routing_rate": 0.20930232558139536,
+      "severe_under_routing": 2,
+      "over_routing_rate": 0.13953488372093023
+    },
+    "test_errors": [
+      {
+        "candidate_id": "c0002",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.477,
+        "prompt_preview": "Extract from the text the Australian city on which the show Bluey is inspired Context: The show follows Bluey, an anthro"
+      },
+      {
+        "candidate_id": "c0030",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.599,
+        "prompt_preview": "Give me some strategies for charity fundraising"
+      },
+      {
+        "candidate_id": "c0042",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.429,
+        "prompt_preview": "At what age should I get a shingles vaccine?"
+      },
+      {
+        "candidate_id": "c0044",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.604,
+        "prompt_preview": "Which brands does Geely own? Context: Zhejiang Geely Holding Group Co., Ltd (ZGH), commonly known as Geely (吉利 /ˈdʒiːliː"
+      },
+      {
+        "candidate_id": "c0051",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.381,
+        "prompt_preview": "Are large language models actually smart like humans?"
+      },
+      {
+        "candidate_id": "c0067",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.388,
+        "prompt_preview": "Who is the haas formula 1 team principal?"
+      },
+      {
+        "candidate_id": "c0070",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.556,
+        "prompt_preview": "What are some foods to cook to celebrate St. Patrick's Day?"
+      },
+      {
+        "candidate_id": "c0102",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.535,
+        "prompt_preview": "What marathon did the first woman officially finish, based on the paragraph. Context: For a long time after the Olympic "
+      },
+      {
+        "candidate_id": "c0103",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.817,
+        "prompt_preview": "Correct the typos and grammar in this passage Context: Driven to investigate teh explained disappearance of her father, "
+      },
+      {
+        "candidate_id": "c0146",
+        "true_tier": 3,
+        "predicted_tier": 1,
+        "confidence": 0.436,
+        "prompt_preview": "Why do teenagers disappoint their parents?"
+      },
+      {
+        "candidate_id": "c0156",
+        "true_tier": 3,
+        "predicted_tier": 2,
+        "confidence": 0.678,
+        "prompt_preview": "Extract the current cash rate and basis point increase from the following using the format: {x} % increased by {x} basis"
+      },
+      {
+        "candidate_id": "c0167",
+        "true_tier": 3,
+        "predicted_tier": 1,
+        "confidence": 0.406,
+        "prompt_preview": "How can I help a homeless person?"
+      },
+      {
+        "candidate_id": "c0179",
+        "true_tier": 3,
+        "predicted_tier": 2,
+        "confidence": 0.517,
+        "prompt_preview": "Draft an e-mail to a resort inquiring about information regarding a vow renewal celebration for my wife and me."
+      },
+      {
+        "candidate_id": "c0188",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.499,
+        "prompt_preview": "What are the top nominated films to the Academy Awards in 2023?"
+      },
+      {
+        "candidate_id": "c0207",
+        "true_tier": 3,
+        "predicted_tier": 2,
+        "confidence": 0.549,
+        "prompt_preview": "Which items are not allowed when passing through TSA security? baby carrier, empty water bottle, dog, box cutters, baseb"
+      }
+    ],
+    "test_other_model": {
+      "random_forest": {
+        "n": 43,
+        "accuracy": 0.5348837209302325,
+        "macro_f1": 0.5233699633699634,
+        "per_tier": {
+          "1": {
+            "precision": 0.5454545454545454,
+            "recall": 0.42857142857142855,
+            "f1": 0.48,
+            "support": 14
+          },
+          "2": {
+            "precision": 0.6111111111111112,
+            "recall": 0.6470588235294118,
+            "f1": 0.6285714285714286,
+            "support": 17
+          },
+          "3": {
+            "precision": 0.42857142857142855,
+            "recall": 0.5,
+            "f1": 0.46153846153846156,
+            "support": 12
+          }
+        },
+        "confusion_matrix": [
+          [
+            6,
+            4,
+            4
+          ],
+          [
+            2,
+            11,
+            4
+          ],
+          [
+            3,
+            3,
+            6
+          ]
+        ],
+        "under_routing_rate": 0.18604651162790697,
+        "severe_under_routing": 3,
+        "over_routing_rate": 0.27906976744186046
+      }
+    },
+    "threshold_table": [
+      {
+        "threshold": 0.0,
+        "routed_up_rate": 0.0,
+        "accuracy": 0.5465116279069767,
+        "under_routing_rate": 0.2441860465116279,
+        "over_routing_rate": 0.20930232558139536,
+        "tier3_recall": 0.42857142857142855,
+        "tier_share": {
+          "1": 0.36627906976744184,
+          "2": 0.3488372093023256,
+          "3": 0.28488372093023256
+        }
+      },
+      {
+        "threshold": 0.4,
+        "routed_up_rate": 0.06395348837209303,
+        "accuracy": 0.5406976744186046,
+        "under_routing_rate": 0.22093023255813954,
+        "over_routing_rate": 0.23837209302325582,
+        "tier3_recall": 0.4897959183673469,
+        "tier_share": {
+          "1": 0.32558139534883723,
+          "2": 0.36627906976744184,
+          "3": 0.3081395348837209
+        }
+      },
+      {
+        "threshold": 0.45,
+        "routed_up_rate": 0.14534883720930233,
+        "accuracy": 0.5465116279069767,
+        "under_routing_rate": 0.18604651162790697,
+        "over_routing_rate": 0.26744186046511625,
+        "tier3_recall": 0.5510204081632653,
+        "tier_share": {
+          "1": 0.29069767441860467,
+          "2": 0.3546511627906977,
+          "3": 0.3546511627906977
+        }
+      },
+      {
+        "threshold": 0.5,
+        "routed_up_rate": 0.27906976744186046,
+        "accuracy": 0.5174418604651163,
+        "under_routing_rate": 0.1511627906976744,
+        "over_routing_rate": 0.3313953488372093,
+        "tier3_recall": 0.6326530612244898,
+        "tier_share": {
+          "1": 0.2558139534883721,
+          "2": 0.29069767441860467,
+          "3": 0.45348837209302323
+        }
+      },
+      {
+        "threshold": 0.55,
+        "routed_up_rate": 0.3546511627906977,
+        "accuracy": 0.5116279069767442,
+        "under_routing_rate": 0.11627906976744186,
+        "over_routing_rate": 0.37209302325581395,
+        "tier3_recall": 0.7142857142857143,
+        "tier_share": {
+          "1": 0.22674418604651161,
+          "2": 0.27325581395348836,
+          "3": 0.5
+        }
+      },
+      {
+        "threshold": 0.6,
+        "routed_up_rate": 0.436046511627907,
+        "accuracy": 0.48255813953488375,
+        "under_routing_rate": 0.09302325581395349,
+        "over_routing_rate": 0.42441860465116277,
+        "tier3_recall": 0.7755102040816326,
+        "tier_share": {
+          "1": 0.19767441860465115,
+          "2": 0.25,
+          "3": 0.5523255813953488
+        }
+      },
+      {
+        "threshold": 0.65,
+        "routed_up_rate": 0.48255813953488375,
+        "accuracy": 0.45348837209302323,
+        "under_routing_rate": 0.0872093023255814,
+        "over_routing_rate": 0.45930232558139533,
+        "tier3_recall": 0.7959183673469388,
+        "tier_share": {
+          "1": 0.1744186046511628,
+          "2": 0.25,
+          "3": 0.5755813953488372
+        }
+      },
+      {
+        "threshold": 0.7,
+        "routed_up_rate": 0.5406976744186046,
+        "accuracy": 0.436046511627907,
+        "under_routing_rate": 0.06976744186046512,
+        "over_routing_rate": 0.4941860465116279,
+        "tier3_recall": 0.7959183673469388,
+        "tier_share": {
+          "1": 0.13372093023255813,
+          "2": 0.27325581395348836,
+          "3": 0.5930232558139535
+        }
+      }
+    ],
+    "task_type_test_accuracy": 0.6046511627906976,
+    "top_features": {
+      "1": [
+        [
+          "hc:has_context",
+          1.03
+        ],
+        [
+          "tfidf:was",
+          0.869
+        ],
+        [
+          "tfidf:first",
+          0.48
+        ],
+        [
+          "tfidf:girl",
+          0.472
+        ],
+        [
+          "tfidf:what was",
+          0.415
+        ],
+        [
+          "tfidf:who",
+          0.406
+        ],
+        [
+          "tfidf:all",
+          0.387
+        ],
+        [
+          "tfidf:championship",
+          0.386
+        ]
+      ],
+      "2": [
+        [
+          "hc:summary_verbs",
+          0.546
+        ],
+        [
+          "tfidf:be",
+          0.535
+        ],
+        [
+          "tfidf:for",
+          0.5
+        ],
+        [
+          "tfidf:can",
+          0.483
+        ],
+        [
+          "tfidf:north",
+          0.448
+        ],
+        [
+          "tfidf:are",
+          0.432
+        ],
+        [
+          "tfidf:think",
+          0.432
+        ],
+        [
+          "tfidf:does",
+          0.431
+        ]
+      ],
+      "3": [
+        [
+          "hc:log_tokens_total",
+          0.753
+        ],
+        [
+          "tfidf:great",
+          0.698
+        ],
+        [
+          "tfidf:when did",
+          0.52
+        ],
+        [
+          "tfidf:what",
+          0.516
+        ],
+        [
+          "tfidf:how",
+          0.47
+        ],
+        [
+          "tfidf:the best",
+          0.445
+        ],
+        [
+          "tfidf:on the",
+          0.442
+        ],
+        [
+          "tfidf:sport",
+          0.44
+        ]
+      ]
+    },
+    "training_size": 172,
+    "test_size": 43,
+    "tier_counts_train": {
+      "1": 55,
+      "2": 68,
+      "3": 49
+    },
+    "split_created": true
+  }
+}
