@@ -32,7 +32,7 @@ def test_fill_readme(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(script, "README", readme)
     monkeypatch.setattr(script, "REPORT", report)
 
-    assert script.main() == 0
+    assert script.main([]) == 0
     text = readme.read_text()
     assert "**Cut LLM cost by 62% vs. sending everything to the top model (27% net after verifying a random 15%" in text
     assert "81% quality parity (95% CI 78%–84%) on 998 requests" in text
@@ -40,5 +40,5 @@ def test_fill_readme(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     assert "net savings in this run -80%" in text and "7 excluded and reported" in text
     assert "{{" not in text
 
-    script.main()  # refilling replaces the block instead of duplicating it
+    script.main([])  # refilling replaces the block instead of duplicating it
     assert readme.read_text().count("<!-- results:start -->") == 1

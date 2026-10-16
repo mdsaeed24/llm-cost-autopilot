@@ -1,0 +1,193 @@
+{
+  "generated_at": "2026-10-16T15:45:16.991173+00:00",
+  "api_url": "http://localhost:8000",
+  "classifier_version": "v3",
+  "mode": "evaluation",
+  "escalation_mode": "async",
+  "pricing_status_at_start": "DeepSeek pricing: OFF-PEAK (Fri 15:39 UTC); switches to peak in 57h20m at Mon 01:00 UTC",
+  "run": {
+    "started_at": "2026-10-16T15:39:42.570037+00:00",
+    "duration_s": 324.3,
+    "verification_wait_s": 10.1,
+    "verification_drained": true,
+    "queue_at_end": {
+      "done": 974
+    },
+    "concurrency": 5,
+    "offset": 0,
+    "sent": 300,
+    "ok": 300,
+    "failed": 0,
+    "failures": []
+  },
+  "headline": "Increased LLM cost by 71% net of verification (54% before verification) while keeping 85% quality parity [95% CI 80%\u201389%, n=214] on 300 requests.",
+  "costs": {
+    "serve_usd": 0.23480690599999998,
+    "verification_usd": 0.6407387360000001,
+    "total_usd": 0.8755456420000001,
+    "all_tier3_baseline_usd": 0.513374488,
+    "baseline_measured_share": 1.0,
+    "gross_savings_pct": 0.5426206181090947,
+    "net_savings_pct": -0.7054716634068503,
+    "verification_overhead_pct_of_baseline": 1.248092281515945,
+    "offpeak_equivalent_total_usd": 0.43777282100000003,
+    "projection": {
+      "sample_rate": 0.15,
+      "total_usd": 0.3309177164,
+      "net_savings_pct": 0.3554067758817029,
+      "note": "verification cost scaled linearly to the production sample rate; serving cost unchanged"
+    },
+    "estimate": {
+      "prompts": 300,
+      "routed_tiers": {
+        "1": 72,
+        "2": 142,
+        "3": 86
+      },
+      "serve_usd": 0.21435982499999987,
+      "verification_usd": 0.8265265800000003,
+      "total_usd": 1.0408864050000002,
+      "offpeak_total_usd": 0.5204432025000001
+    }
+  },
+  "quality": {
+    "judged": 214,
+    "passed": 182,
+    "parity": 0.8504672897196262,
+    "ci_low": 0.7965284393236222,
+    "ci_high": 0.8920452766241124,
+    "reliable": true,
+    "excluded_routed_truncated": 0,
+    "excluded_reference_truncated": 0,
+    "excluded_judge_unparseable": 0,
+    "verification_failed_jobs": 0,
+    "pending": 0,
+    "sync_judged": 0,
+    "sync_passed": 0
+  },
+  "routing": {
+    "distribution": {
+      "deepseek-flash": 0.47333333333333333,
+      "deepseek-v4-pro": 0.2866666666666667,
+      "local-llama": 0.24
+    },
+    "routed_up_rate": 0.18,
+    "failover_rate": 0.0,
+    "escalation_rate": 0.10666666666666667,
+    "escalations_async": 32,
+    "escalations_sync": 0
+  },
+  "per_tier": [
+    {
+      "tier": 1,
+      "requests": 72,
+      "truncated": 0,
+      "truncation_rate": 0.0,
+      "p50_latency_ms": 3923.95,
+      "p95_latency_ms": 13914.95
+    },
+    {
+      "tier": 2,
+      "requests": 142,
+      "truncated": 0,
+      "truncation_rate": 0.0,
+      "p50_latency_ms": 2516.8,
+      "p95_latency_ms": 6334.939999999998
+    },
+    {
+      "tier": 3,
+      "requests": 86,
+      "truncated": 0,
+      "truncation_rate": 0.0,
+      "p50_latency_ms": 5599.65,
+      "p95_latency_ms": 21270.800000000003
+    }
+  ],
+  "client_latency": {
+    "tier_1": {
+      "n": 72,
+      "p50_ms": 3935.3636454907246,
+      "p95_ms": 13930.328364227898
+    },
+    "tier_2": {
+      "n": 142,
+      "p50_ms": 2527.0164585090242,
+      "p95_ms": 6346.922501450172
+    },
+    "tier_3": {
+      "n": 86,
+      "p50_ms": 5607.072270940989,
+      "p95_ms": 21279.626218252815
+    }
+  },
+  "stats": {
+    "headline": "Increased LLM cost by 71% net of verification (54% before verification) while keeping 85% quality parity [95% CI 80%\u201389%, n=214] on 300 requests.",
+    "mode": "evaluation",
+    "since_hours": null,
+    "summary": {
+      "requests": 300,
+      "errors": 0,
+      "serve_cost_usd": 0.23480690599999998,
+      "verification_cost_usd": 0.6407387360000001,
+      "total_cost_usd": 0.8755456420000001,
+      "baseline_cost_usd": 0.513374488,
+      "baseline_measured_share": 1.0,
+      "gross_savings_usd": 0.278567582,
+      "gross_savings_pct": 0.5426206181090947,
+      "net_savings_usd": -0.3621711540000001,
+      "net_savings_pct": -0.7054716634068503,
+      "verification_overhead_pct": 1.248092281515945,
+      "quality": {
+        "judged": 214,
+        "passed": 182,
+        "parity": 0.8504672897196262,
+        "ci_low": 0.7965284393236222,
+        "ci_high": 0.8920452766241124,
+        "reliable": true,
+        "excluded_routed_truncated": 0,
+        "excluded_reference_truncated": 0,
+        "excluded_judge_unparseable": 0,
+        "verification_failed_jobs": 0,
+        "pending": 0,
+        "sync_judged": 0,
+        "sync_passed": 0
+      },
+      "escalations_async": 32,
+      "escalations_sync": 0,
+      "escalation_rate": 0.10666666666666667,
+      "routed_up_rate": 0.18,
+      "failover_rate": 0.0,
+      "routing_share": {
+        "deepseek-flash": 0.47333333333333333,
+        "deepseek-v4-pro": 0.2866666666666667,
+        "local-llama": 0.24
+      },
+      "tiers": [
+        {
+          "tier": 1,
+          "requests": 72,
+          "truncated": 0,
+          "truncation_rate": 0.0,
+          "p50_latency_ms": 3923.95,
+          "p95_latency_ms": 13914.95
+        },
+        {
+          "tier": 2,
+          "requests": 142,
+          "truncated": 0,
+          "truncation_rate": 0.0,
+          "p50_latency_ms": 2516.8,
+          "p95_latency_ms": 6334.939999999998
+        },
+        {
+          "tier": 3,
+          "requests": 86,
+          "truncated": 0,
+          "truncation_rate": 0.0,
+          "p50_latency_ms": 5599.65,
+          "p95_latency_ms": 21270.800000000003
+        }
+      ]
+    }
+  }
+}

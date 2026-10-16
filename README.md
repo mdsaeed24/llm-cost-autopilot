@@ -1,6 +1,6 @@
 # LLM Cost Autopilot
 
-**Cut LLM cost by 62% vs. sending everything to the top model (43% net after verifying a random 15% of answers), while keeping 78% quality parity (95% CI 75%–81%) on 1,000 requests.**
+**Cut LLM cost by 54% vs. sending everything to the top model (36% net after verifying a random 15% of answers), while keeping 85% quality parity (95% CI 80%–89%) on 300 requests.**
 
 A routing layer that sits in front of three LLMs, classifies each request's complexity, sends it
 to the cheapest model that can handle it, verifies a random sample of those decisions against
@@ -8,22 +8,22 @@ the top model in the background, and turns confirmed routing failures into new t
 
 <!-- results:start -->
 
-| Load test | Result |
+| Load test (classifier v3) | Result |
 |---|---|
-| Requests (held-out Dolly pool) | 1,000 answered, 0 failed |
-| Routing | local-llama 46% · deepseek-flash 29% · deepseek-v4-pro 25% |
-| Everything on Tier 3 (baseline) | $1.86 (all measured: real Tier-3 cost for every request) |
-| Autopilot answering cost | $0.70 → **gross savings 62%** |
-| Quality parity (judge: as good as Tier 3) | **77.8%** — 95% CI 74.7%–80.6%, n=751; 0 excluded and reported |
-| Verification, every downgraded answer (load test) | $2.36 → net savings in this run -64% |
-| Projected net savings, 15% verified (production) | **43%** |
-| Escalation rate (failures logged) | 16.7% |
-| Routed up for low confidence | 20.4% |
-| Latency P50 / P95 by tier | T1 11.7s / 28.7s · T2 1.5s / 6.2s · T3 11.5s / 27.1s |
+| Requests (held-out Dolly pool) | 300 answered, 0 failed |
+| Routing | deepseek-flash 47% · deepseek-v4-pro 29% · local-llama 24% |
+| Everything on Tier 3 (baseline) | $0.51 (all measured: real Tier-3 cost for every request) |
+| Autopilot answering cost | $0.23 → **gross savings 54%** |
+| Quality parity (judge: as good as Tier 3) | **85.0%** — 95% CI 79.7%–89.2%, n=214; 0 excluded and reported |
+| Verification, every downgraded answer (load test) | $0.64 → net savings in this run -71% |
+| Projected net savings, 15% verified (production) | **36%** |
+| Escalation rate (failures logged) | 10.7% |
+| Routed up for low confidence | 18.0% |
+| Latency P50 / P95 by tier | T1 3.9s / 13.9s · T2 2.5s / 6.3s · T3 5.6s / 21.3s |
 | Truncated at max_tokens (excluded from parity) | T1 0.0% · T2 0.0% · T3 0.0% |
-| Load-test bill | $3.06 at peak prices · $1.53 at off-peak prices |
+| Load-test bill | $0.88 at peak prices · $0.44 at off-peak prices |
 
-Full report: [`data/loadtest_report.md`](data/loadtest_report.md) · raw numbers: [`data/loadtest_report.json`](data/loadtest_report.json)
+Full report: [`data/loadtest_report_v3.md`](data/loadtest_report_v3.md) · raw numbers: [`data/loadtest_report_v3.json`](data/loadtest_report_v3.json)
 
 <!-- results:end -->
 
@@ -34,17 +34,18 @@ Full report: [`data/loadtest_report.md`](data/loadtest_report.md) · raw numbers
 |---|---|
 | ![Dashboard: net savings, quality parity, verification overhead and gross savings side by side](docs/screenshots/overview.png) | ![Routing distribution and judge-score distribution](docs/screenshots/charts.png) |
 
-*The dashboard shows the load test itself, where **every** downgraded answer was verified — so net
-savings there are negative (−65%) by design. The 43% headline is the same run projected to the
-production verification rate of 15%. It also counts 10 extra requests from a trial run (1,010 vs 1,000).*
+*Screenshots are from the first load test (classifier v2, 1,000 prompts + a 10-prompt trial run).
+In a load test **every** downgraded answer is verified, so net savings there are negative by design;
+the headline figures are projected to the production verification rate of 15%.*
 
 ---
 
-## What the load test taught me
+## What the load tests taught me
 
-The overall 78% hides two very different models:
+**Run 1 — classifier v2, 1,000 prompts:** 62% gross savings (43% projected net), **78% quality
+parity** (95% CI 75–81%). The overall number hid two very different models:
 
-| Answered by | Quality parity (95% CI) | Verified |
+| Answered by (run 1) | Quality parity (95% CI) | Verified |
 |---|---|---|
 | DeepSeek Flash (Tier 2) | **97.3%** (95–99%) | 291 |
 | Local llama 3B (Tier 1) | **65.4%** (61–70%) | 460 |
@@ -52,33 +53,52 @@ The overall 78% hides two very different models:
 | ↳ answering from memory (no text given) | 60.7% (55–66%) | 321 |
 | Requests routed up for low confidence | 99.2% | 128 |
 
-- **The router does what it was taught; the rubric was too optimistic.** 153 of the 167 failures
-  are short fact questions answered from memory ("Who directed the most episodes of season five of
-  Game of Thrones?"). The rubric put those in Tier 1, but a 3B model doesn't hold that knowledge.
-- **The feedback loop caught it — and the safeguard held.** Retraining on the 167 failures (dry run)
-  teaches "fact questions → Tier 2", which contradicts the human-labeled test set. The candidate scored
-  67% accuracy / 82% Tier-3 recall against v2's 79% / 91%, so the promotion rule refused it. A
-  model that disagrees with the reference labels never goes live by accident; the fix is a
-  deliberate **policy** change (rubric rule 2 → Tier 2 for questions answered from memory), then
-  re-labeling the affected test prompts.
-- **What that change would buy (projection from the measured per-tier numbers, not measured):**
-  moving the 321 memory-only questions to Flash adds about $0.11 to this run's answering cost.
-  Gross savings fall from 62% to about 57%, while parity on downgraded answers rises from 78% to
-  roughly 93%.
-- **Low confidence is a good signal for "route up", not for "this will fail".** Routed-up requests
-  reached 99% parity, but among the rest, parity was similar at confidence 0.50–0.65 (72%) and
-  ≥ 0.65 (75%): a higher threshold would not fix the Tier-1 knowledge gap.
-- **Verification is the expensive part.** Checking every downgraded answer cost $2.36, more than
-  serving everything with Tier 3 ($1.86). At the production rate of 15% the same checks cost about
-  $0.35, which is where the 43% projected net saving comes from.
+- **The router did what it was taught; the rubric was too optimistic.** 153 of the 167 failures
+  were short fact questions answered from memory ("Who directed the most episodes of season five
+  of Game of Thrones?"). The rubric put those in Tier 1, but a 3B model doesn't hold that knowledge.
+- **The safeguard held.** Retraining on the 167 failures taught "fact questions → Tier 2", which
+  contradicted the human-labeled test set, so the promotion rule refused it (67% / 82% vs 79% / 91%).
+  A model that disagrees with the reference labels never goes live by accident — the fix had to be
+  a deliberate **policy** change.
+
+**The fix (round 3):** rubric rule 2 became "fact question answered from memory → Tier 2"
+(`rules-v3`). Only the 84 affected labels were re-checked, old answers hidden; 69 moved up a tier.
+Classifier v3 went live (test accuracy 78% vs v2's 63% on the updated labels; under-routing 22% → 10%).
+
+**Run 2 — same first 300 prompts, v2 vs v3** ([`data/v2_vs_v3_comparison.json`](data/v2_vs_v3_comparison.json)):
+
+| Same 300 prompts | v2 (before) | **v3 (after)** |
+|---|---|---|
+| Sent to local llama 3B | 48% | **24%** |
+| Quality parity (95% CI) | 76.7% (71–82%) | **85.0% (80–89%)** |
+| Routing failures found | 54 | **32** |
+| Gross savings | 66.7% | 54.3% |
+| Projected net savings (15% verified) | 46.4% | 35.5% |
+
+- **The trade-off is explicit:** about 12 points of savings bought about 8 points of quality.
+  Where to sit on that curve is a product decision; the system makes it measurable.
+- **My projection was too optimistic** (I estimated ~93% parity; measured 85%). The memory questions
+  moved to Flash as intended — 71 of the 72 requests still sent to llama now include a text passage —
+  but llama's parity on what it still gets did not change (65%). The remaining gap is the 3B model's
+  reading comprehension, not the routing policy.
+- **Feedback loop, round 2:** retraining v3's labels plus the 167 failures (v5) caught 100% of
+  Tier-3 prompts but scored one test prompt lower on accuracy (76% vs 78%), so the not-worse rule
+  kept v3. Moving the goalposts after seeing a result would defeat the rule; a tolerance would have
+  to be agreed in advance.
+- **Low confidence is a good signal for "route up", not for "this will fail".** In run 1,
+  routed-up requests reached 99% parity, but among the rest parity was similar at confidence
+  0.50–0.65 (72%) and ≥ 0.65 (75%).
+- **Verification is the expensive part.** Checking every downgraded answer costs more than serving
+  everything with Tier 3 (run 1: $2.36 vs $1.86). At 15% the same checks cost about a seventh of
+  that, which is where the projected net savings come from.
 
 ## Contents
 
-- [What the load test taught me](#what-the-load-test-taught-me)
+- [What the load tests taught me](#what-the-load-tests-taught-me)
 - [How it works](#how-it-works)
 - [Routing logic](#routing-logic)
 - [Verification and the feedback loop](#verification-and-the-feedback-loop)
-- [The classifier: from 55% to 79%](#the-classifier-from-55-to-79)
+- [The classifier: from 55% to 78%](#the-classifier-from-55-to-78)
 - [Honest metrics](#honest-metrics)
 - [Setup](#setup)
 - [API](#api)
@@ -155,17 +175,20 @@ thinking mode **on** by default, so the client always sends the toggle explicitl
   side (the load test used three); failed jobs retry with backoff, and jobs from a crashed worker
   are reclaimed after a visibility timeout.
 
-## The classifier: from 55% to 79%
+## The classifier: from 55% to 78%
 
 The most useful lesson of the project came from the data, not the model.
 
-| | v1 (round-1 labels) | v2 (rubric labels) |
-|---|---|---|
-| Labels | 215, hand-labeled from Dolly 15k | 296, re-labeled with a written first-match rubric |
-| Cross-validated accuracy | 55% ± 5% | **71% ± 6%** |
-| Held-out test accuracy (n≈42) | 65% | **79%** |
-| Held-out Tier-3 recall | 58% | **91%** |
-| Under-routing (hard prompt → weaker model) | 21% | **7%** |
+| | v1 (round-1 labels) | v2 (`rules-v2`) | **v3 (`rules-v3`, live)** |
+|---|---|---|---|
+| Labels | 215, hand-labeled from Dolly 15k | 296, re-labeled with a written first-match rubric | 290; memory-only fact questions re-checked |
+| Cross-validated accuracy | 55% ± 5% | 71% ± 6% | **76% ± 7%** |
+| Held-out test accuracy (n≈41) | 65% | 79% | **78%** |
+| Held-out Tier-3 recall | 58% | 91% | **91%** |
+| Under-routing (hard prompt → weaker model) | 21% | 7% | **10%** |
+
+*Each column is scored against its own labels; on the v3 labels, v2 scores 63% — the comparison
+the promotion rule used.*
 
 - **v1 missed the 80% target**, and changing the model didn't help: eight variants (regularisation,
   feature subsets, random forest) all scored 43–52% in cross-validation, against a 40%
@@ -295,8 +318,9 @@ pinned scikit-learn (pickles are version-sensitive) · scripts are thin, logic l
 - **Small labeled set:** 296 labels and a 42-prompt test set — test accuracy moves ~2.4 points per
   prompt. The feedback loop adds examples over time; more human labels would help most.
 - **One labeler:** the rubric made labels consistent, but they are still one person's judgement.
-- **Laptop Tier 1:** local llama latency (P50 several seconds) is the price of $0; a hosted small
-  model would trade cost for speed.
+- **Tier 1 is the weak link:** llama 3B reaches ~65% parity even when the answer is in the provided
+  text. A stronger local model (e.g. an 8B), or routing long passages to Flash, is the next lever —
+  routing policy alone can't fix it. Laptop latency (P50 several seconds) is also the price of $0.
 - **Next:** calibrate classifier probabilities, tune the route-up threshold from verification data,
   per-tenant budgets, streaming responses.
 

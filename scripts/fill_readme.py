@@ -1,13 +1,16 @@
-"""Fill the README headline and results table from data/loadtest_report.json (no hand-copied numbers).
+"""Fill the README headline and results table from a load-test report (no hand-copied numbers).
 
-    python scripts/fill_readme.py
+    python scripts/fill_readme.py                                         # data/loadtest_report.json
+    python scripts/fill_readme.py --report data/loadtest_report_v3.json
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
+from pathlib import Path
 from typing import Any
 
 from autopilot.settings import PROJECT_ROOT
@@ -57,16 +60,22 @@ def results_table(report: dict[str, Any]) -> str:
         ("Truncated at max_tokens (excluded from parity)", truncation),
         ("Load-test bill", f"${c['total_usd']:.2f} at peak prices · ${c['offpeak_equivalent_total_usd']:.2f} at off-peak prices"),
     ]
-    lines = [START, "", "| Load test | Result |", "|---|---|", *[f"| {a} | {b} |" for a, b in rows], "",
-             "Full report: [`data/loadtest_report.md`](data/loadtest_report.md) · raw numbers: "
-             "[`data/loadtest_report.json`](data/loadtest_report.json)", "", END]
+    stem = report.get("_report_stem", "data/loadtest_report")
+    lines = [START, "", f"| Load test (classifier {report.get('classifier_version')}) | Result |", "|---|---|",
+             *[f"| {a} | {b} |" for a, b in rows], "",
+             f"Full report: [`{stem}.md`]({stem}.md) · raw numbers: [`{stem}.json`]({stem}.json)", "", END]
     return "\n".join(lines)
 
 
-def main() -> int:
-    report = json.loads(REPORT.read_text(encoding="utf-8"))
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--report", type=Path, default=None, help="Load-test report JSON.")
+    args = parser.parse_args(argv)
+    report_path = args.report or REPORT
+    report = json.loads(report_path.read_text(encoding="utf-8"))
     text = README.read_text(encoding="utf-8")
     text = re.sub(r"^\*\*.*\*\*$", f"**{headline(report)}**", text, count=1, flags=re.MULTILINE)
+    report["_report_stem"] = str(report_path.with_suffix("").relative_to(PROJECT_ROOT)) if report_path.is_relative_to(PROJECT_ROOT) else str(report_path.with_suffix(""))
     table = results_table(report)
     if START in text:
         text = re.sub(re.escape(START) + r".*?" + re.escape(END), lambda _m: table, text, count=1, flags=re.DOTALL)
