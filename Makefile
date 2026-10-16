@@ -2,7 +2,7 @@ PY := .venv/bin/python
 LIMIT ?=
 
 .PHONY: help install test smoke sample label label-stats relabel relabel-stats train retrain \
-        api worker worker-once ask dashboard up up-eval down logs loadtest docker-retrain review-facts review-facts-stats
+        api worker worker-once ask dashboard up up-eval down logs loadtest docker-retrain review-facts review-facts-stats demo
 
 help:  ## List targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -85,3 +85,6 @@ review-facts:  ## Round 3: re-check memory-only fact questions under rules-v3 (m
 
 review-facts-stats:  ## Round-3 progress + how many labels moved
 	$(PY) scripts/label_prompts.py --round 3 --stats
+
+demo:  ## Public read-only demo page (what Streamlit Cloud runs) on :8502
+	$(PY) -m streamlit run streamlit_app.py --server.port 8502

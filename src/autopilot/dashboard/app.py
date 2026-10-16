@@ -118,21 +118,12 @@ def chart_card(title: str, chart: object, data: pd.DataFrame, caption: str | Non
         st.dataframe(data, hide_index=True, width="stretch")
 
 
-def main() -> None:
-    st.set_page_config(page_title="LLM Cost Autopilot", page_icon="🧭", layout="wide")
-    settings = load_settings()
+def render_dashboard(db_path: Path, *, mode: str | None = None, since: datetime | None = None) -> None:
+    """Honest panel + operations row + all charts for one database (reused by the public demo)."""
     catalog = load_catalog()
     routing = load_routing_config(catalog)
     tier3 = catalog.get(routing.tiers[3])
     threshold = load_quality_config(catalog).default.pass_threshold
-    db_path = settings.database.resolved_path()
-
-    st.title("LLM Cost Autopilot")
-    filters = st.columns([1, 1, 2])
-    mode = MODES[filters[0].selectbox("Traffic", list(MODES))]
-    period = PERIODS[filters[1].selectbox("Period", list(PERIODS))]
-    filters[2].caption(f"Database: `{db_path}` · costs at DeepSeek peak prices (off-peak is 50% cheaper)")
-    since = datetime.now(UTC) - period if period else None
 
     if not db_path.exists():
         st.info("No database yet — send some requests first (`make ask`).")
@@ -178,4 +169,17 @@ def main() -> None:
                "Answers cut off at max_tokens are excluded from quality parity — shown here so nothing is hidden.")
 
 
-main()
+def main() -> None:
+    st.set_page_config(page_title="LLM Cost Autopilot", page_icon="🧭", layout="wide")
+    db_path = load_settings().database.resolved_path()
+    st.title("LLM Cost Autopilot")
+    filters = st.columns([1, 1, 2])
+    mode = MODES[filters[0].selectbox("Traffic", list(MODES))]
+    period = PERIODS[filters[1].selectbox("Period", list(PERIODS))]
+    filters[2].caption(f"Database: `{db_path}` · costs at DeepSeek peak prices (off-peak is 50% cheaper)")
+    since = datetime.now(UTC) - period if period else None
+    render_dashboard(db_path, mode=mode, since=since)
+
+
+if __name__ == "__main__":
+    main()

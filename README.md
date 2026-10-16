@@ -27,6 +27,10 @@ Full report: [`data/loadtest_report_v3.md`](data/loadtest_report_v3.md) · raw n
 
 <!-- results:end -->
 
+**Live demo** — a read-only Streamlit page with the real load-test results and a *Try the router* box
+(the trained classifier picks a model for any prompt you type; no LLM is called, no API key needed):
+run it locally with `make demo`, or deploy `streamlit_app.py` on [Streamlit Community Cloud](https://share.streamlit.io).
+
 > Every cost is at DeepSeek **peak** prices (a conservative upper bound; off-peak is 50% cheaper).
 > Savings are **never** reported without quality parity and the cost of verification next to them.
 

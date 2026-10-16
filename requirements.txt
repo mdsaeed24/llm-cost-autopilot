@@ -1,0 +1,12 @@
+# Streamlit Community Cloud: dependencies for the public demo only (streamlit_app.py).
+# The full project (API, worker, training, load test) installs from pyproject.toml: `make install`.
+# scikit-learn is pinned: the classifier is a pickle and must load with the version it was saved with.
+streamlit==1.65.0
+pandas==3.0.6
+numpy==2.5.4
+scikit-learn==1.9.1
+joblib==1.6.0
+pydantic==2.14.1
+pyyaml==6.0.3
+python-dotenv==1.2.4
+openai==3.31.0

@@ -20,3 +20,6 @@ dist/
 .vscode/
 .idea/
 .DS_Store
+
+# Public demo snapshots (read-only copies of real load-test runs)
+!demo/*.db
