@@ -26,6 +26,7 @@ from autopilot.classifier.training import DEFAULT_SPECS, TestSplit
 from autopilot.classifier.workflow import RetrainLogEntry, train_compare_promote
 from autopilot.dataset.io import read_jsonl, write_jsonl
 from autopilot.dataset.schemas import LabeledPrompt
+from autopilot.dataset.relabel import latest_labels_file
 from autopilot.settings import PROJECT_ROOT, load_settings
 from autopilot.storage.db import Database, utc_now
 from autopilot.storage.repository import Repository
@@ -34,7 +35,8 @@ from autopilot.storage.repository import Repository
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     data = PROJECT_ROOT / "data"
-    parser.add_argument("--labels", type=Path, nargs="+", default=[data / "labeled_prompts_v2.jsonl"])
+    parser.add_argument("--labels", type=Path, nargs="+", default=[latest_labels_file(data)],
+                        help="Labels file(s); default: the newest (v3 → v2 → round 1)")
     parser.add_argument("--split", type=Path, default=data / "test_split.json")
     parser.add_argument("--models-dir", type=Path, default=DEFAULT_MODELS_DIR)
     parser.add_argument("--failures-out", type=Path, default=data / "routing_failures.jsonl")

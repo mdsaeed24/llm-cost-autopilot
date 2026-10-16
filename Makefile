@@ -2,7 +2,7 @@ PY := .venv/bin/python
 LIMIT ?=
 
 .PHONY: help install test smoke sample label label-stats relabel relabel-stats train retrain \
-        api worker worker-once ask dashboard up up-eval down logs loadtest docker-retrain
+        api worker worker-once ask dashboard up up-eval down logs loadtest docker-retrain review-facts review-facts-stats
 
 help:  ## List targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -79,3 +79,9 @@ loadtest:  ## Load test against the running stack (make up-eval first; make load
 
 docker-retrain:  ## Feedback loop using the Docker database
 	docker compose run --rm worker python scripts/retrain.py
+
+review-facts:  ## Round 3: re-check memory-only fact questions under rules-v3 (make review-facts LIMIT=20)
+	$(PY) scripts/label_prompts.py --round 3 $(if $(LIMIT),--limit $(LIMIT),)
+
+review-facts-stats:  ## Round-3 progress + how many labels moved
+	$(PY) scripts/label_prompts.py --round 3 --stats

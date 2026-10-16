@@ -33,24 +33,44 @@ TASK_TYPE_HELP: dict[TaskType, str] = {
 }
 
 
-# Decision rules for labeling round 2. Go top to bottom; the first rule that matches decides.
-# Round 1 used only TIER_HELP, which left common cases (e.g. a fact question with no text
-# given) undefined — similar prompts ended up in different tiers.
-RUBRIC_VERSION = "rules-v2"
-RUBRIC: tuple[tuple[str, Tier], ...] = (
-    ("The answer is already in the given text (find, copy, reformat, fix typos)", 1),
-    ("A short fact question answerable in one line (who / what / when / where)", 1),
-    ("Summarise, classify or sort things, make a list, or give a structured overview", 2),
-    ("Asks why/how, wants advice or an opinion weighing pros and cons, needs multi-step "
-     "reasoning or maths, or asks for original creative writing", 3),
+# Decision rules for labeling. Go top to bottom; the first rule that matches decides.
+# rules-v2 (round 2) fixed round 1's undefined cases. rules-v3 (round 3) changes ONE rule after
+# the load test showed the 3B local model answers memory-only fact questions correctly only
+# ~61% of the time (vs ~97% for Flash): such questions now go to Tier 2.
+RubricRules = tuple[tuple[str, Tier], ...]
+
+_RULE_IN_TEXT = ("The answer is already in the given text (find, copy, reformat, fix typos)", 1)
+_RULE_STRUCTURE = ("Summarise, classify or sort things, make a list, or give a structured overview", 2)
+_RULE_HARD = (
+    "Asks why/how, wants advice or an opinion weighing pros and cons, needs multi-step "
+    "reasoning or maths, or asks for original creative writing",
+    3,
 )
+
+RUBRICS: dict[str, RubricRules] = {
+    "rules-v2": (
+        _RULE_IN_TEXT,
+        ("A short fact question answerable in one line (who / what / when / where)", 1),
+        _RULE_STRUCTURE,
+        _RULE_HARD,
+    ),
+    "rules-v3": (
+        _RULE_IN_TEXT,
+        ("A fact question answered from memory — no text given to find it in (who / what / when / where)", 2),
+        _RULE_STRUCTURE,
+        _RULE_HARD,
+    ),
+}
+RUBRIC_VERSION = "rules-v2"   # used by labeling round 2
+LATEST_RUBRIC = "rules-v3"    # used by round 3 (memory-fact review)
 RUBRIC_TIE_BREAK = "Torn between two tiers? Pick the LOWER one — the router already routes unsure prompts up."
 
 
-def rubric_text() -> str:
+def rubric_text(version: str = RUBRIC_VERSION) -> str:
     """The rubric as numbered lines, for display."""
-    lines = [f"{i}. {rule}  → Tier {tier}" for i, (rule, tier) in enumerate(RUBRIC, start=1)]
-    return "\n".join([*lines, f"{len(RUBRIC) + 1}. {RUBRIC_TIE_BREAK}"])
+    rules = RUBRICS[version]
+    lines = [f"{i}. {rule}  → Tier {tier}" for i, (rule, tier) in enumerate(rules, start=1)]
+    return "\n".join([*lines, f"{len(rules) + 1}. {RUBRIC_TIE_BREAK}"])
 
 
 def _now() -> datetime:

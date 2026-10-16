@@ -67,7 +67,7 @@ def print_help(console: Console, *, rubric: str | None = None) -> None:
     """Show tier guidance. With a rubric, the rules replace the looser round-1 tier text and
     guidelines, so the labeler never sees two definitions that disagree."""
     if rubric:
-        console.print(Panel(rubric_text(), title=f"Rules ({rubric}) — first match decides", expand=False))
+        console.print(Panel(rubric_text(rubric), title=f"Rules ({rubric}) — first match decides", expand=False))
     else:
         table = Table(title="Tiers", show_header=False, box=None)
         for tier in TIERS:
@@ -114,7 +114,7 @@ def _show_candidate(
 ) -> None:
     console.print()
     if rubric:
-        console.print(Text(rubric_text(), style="dim"))
+        console.print(Text(rubric_text(rubric), style="dim"))
     # Text(...) so brackets in the prompt are never interpreted as rich markup.
     console.print(Panel(Text(candidate.prompt), title=f"{candidate.candidate_id}  ·  {position}/{total}", title_align="left"))
 

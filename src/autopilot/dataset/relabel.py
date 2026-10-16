@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import random
 from collections.abc import Collection, Sequence
+from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict
 
@@ -67,3 +68,47 @@ def agreement(previous: Sequence[LabeledPrompt], current: Sequence[LabeledPrompt
         moved_down=sum(b < a for a, b in pairs),
         confusion=confusion,
     )
+
+
+# ---------- round 3: review memory-only fact questions under rules-v3 ----------
+
+CONTEXT_MARKER = "\n\nContext:\n"
+LABEL_FILES = ("labeled_prompts_v3.jsonl", "labeled_prompts_v2.jsonl", "labeled_prompts.jsonl")
+
+
+def needs_fact_review(label: LabeledPrompt) -> bool:
+    """Labeled Tier 1 with no text attached — the only labels rules-v3 can change."""
+    return label.tier == 1 and CONTEXT_MARKER not in label.prompt
+
+
+def round3_queue(base: Sequence[LabeledPrompt], test_ids: Collection[str], *, seed: int = 11) -> list[Candidate]:
+    """Prompts to review: frozen test prompts first (so stopping early keeps the test set complete)."""
+    rng = random.Random(seed)
+    affected = [label for label in base if needs_fact_review(label)]
+    groups = [[a for a in affected if a.candidate_id in test_ids], [a for a in affected if a.candidate_id not in test_ids]]
+    queue: list[Candidate] = []
+    for group in groups:
+        rng.shuffle(group)
+        queue.extend(Candidate(candidate_id=a.candidate_id, prompt=a.prompt) for a in group)
+    return queue
+
+
+def merge_review(
+    base: Sequence[LabeledPrompt], reviewed: Sequence[LabeledPrompt], skipped_ids: Collection[str]
+) -> list[LabeledPrompt]:
+    """v3 labels = v2 labels, with reviewed prompts replaced and skipped (broken) prompts dropped."""
+    by_id = {r.candidate_id: r for r in reviewed}
+    merged: list[LabeledPrompt] = []
+    for label in base:
+        if label.candidate_id in skipped_ids:
+            continue
+        merged.append(by_id.get(label.candidate_id, label))
+    return merged
+
+
+def latest_labels_file(data_dir: Path) -> Path:
+    """The newest labels file that exists (v3 → v2 → round 1)."""
+    for name in LABEL_FILES:
+        if (data_dir / name).exists():
+            return data_dir / name
+    return data_dir / LABEL_FILES[-1]

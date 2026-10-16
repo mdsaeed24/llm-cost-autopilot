@@ -22,12 +22,14 @@ from autopilot.classifier.registry import DEFAULT_MODELS_DIR
 from autopilot.classifier.reporting import print_outcome, print_report
 from autopilot.classifier.training import DEFAULT_SPECS
 from autopilot.classifier.workflow import train_compare_promote
+from autopilot.dataset.relabel import latest_labels_file
 from autopilot.settings import PROJECT_ROOT
 
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     data = PROJECT_ROOT / "data"
-    parser.add_argument("--labels", type=Path, nargs="+", default=[data / "labeled_prompts_v2.jsonl"])
+    parser.add_argument("--labels", type=Path, nargs="+", default=[latest_labels_file(data)],
+                        help="Labels file(s); default: the newest (v3 → v2 → round 1)")
     parser.add_argument("--split", type=Path, default=data / "test_split.json", help="Frozen test-set ids.")
     parser.add_argument("--models-dir", type=Path, default=DEFAULT_MODELS_DIR)
     parser.add_argument("--seed", type=int, default=42)

@@ -1,0 +1,595 @@
+{
+  "version": "v5",
+  "created_at": "2026-10-16T15:37:25.070887Z",
+  "model_kind": "random_forest+tfidf_hc",
+  "training_size": 416,
+  "test_size": 41,
+  "label_files": {
+    "data/labeled_prompts_v3.jsonl": "9abd4336188d3583c97f3a684aa04dbeda967a7c743ebbb278b172b52f37a5a9",
+    "data/routing_failures.jsonl": "8edffb995f1831e2eb676f826e922e2cacd934f53d916a0b15ccf4f479a7adef"
+  },
+  "test_split_file": "data/test_split.json",
+  "sklearn_version": "1.9.1",
+  "python_version": "3.14.8",
+  "metrics": {
+    "selected": {
+      "kind": "random_forest",
+      "features": "tfidf_hc"
+    },
+    "selection_reason": "highest CV Tier-3 recall among models with CV accuracy ≥ 70%",
+    "cv": {
+      "logistic_regression+tfidf_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.7403327596098681,
+        "accuracy_std": 0.06858105139692545,
+        "macro_f1_mean": 0.6941023689921894,
+        "tier3_recall_mean": 0.6966666666666667,
+        "tier3_recall_std": 0.15070206073943088,
+        "under_routing_mean": 0.175530694205393,
+        "over_routing_mean": 0.08413654618473895
+      },
+      "random_forest+tfidf_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.7498565691336776,
+        "accuracy_std": 0.06613516213879317,
+        "macro_f1_mean": 0.7103497394775864,
+        "tier3_recall_mean": 0.7091666666666667,
+        "tier3_recall_std": 0.15129992289048488,
+        "under_routing_mean": 0.1828169822145726,
+        "over_routing_mean": 0.06732644865174986
+      },
+      "logistic_regression+embed_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.7042168674698794,
+        "accuracy_std": 0.06964022176683578,
+        "macro_f1_mean": 0.6576765404045632,
+        "tier3_recall_mean": 0.6308333333333334,
+        "tier3_recall_std": 0.15100588656664277,
+        "under_routing_mean": 0.18755020080321283,
+        "over_routing_mean": 0.10823293172690762
+      },
+      "random_forest+embed_hc": {
+        "folds": 5,
+        "accuracy_mean": 0.6994262765347102,
+        "accuracy_std": 0.05537617404538903,
+        "macro_f1_mean": 0.6235269094855833,
+        "tier3_recall_mean": 0.39499999999999996,
+        "tier3_recall_std": 0.07371114795831994,
+        "under_routing_mean": 0.240447504302926,
+        "over_routing_mean": 0.060126219162363735
+      },
+      "logistic_regression+embed_hc_tfidf": {
+        "folds": 5,
+        "accuracy_mean": 0.7379518072289156,
+        "accuracy_std": 0.06078071448496117,
+        "macro_f1_mean": 0.6902983141931733,
+        "tier3_recall_mean": 0.6966666666666667,
+        "tier3_recall_std": 0.15070206073943088,
+        "under_routing_mean": 0.17071141709695928,
+        "over_routing_mean": 0.09133677567412507
+      }
+    },
+    "test": {
+      "n": 41,
+      "accuracy": 0.7560975609756098,
+      "macro_f1": 0.7637987012987013,
+      "per_tier": {
+        "1": {
+          "precision": 0.75,
+          "recall": 0.9,
+          "f1": 0.8181818181818182,
+          "support": 10
+        },
+        "2": {
+          "precision": 0.9166666666666666,
+          "recall": 0.55,
+          "f1": 0.6875,
+          "support": 20
+        },
+        "3": {
+          "precision": 0.6470588235294118,
+          "recall": 1.0,
+          "f1": 0.7857142857142857,
+          "support": 11
+        }
+      },
+      "confusion_matrix": [
+        [
+          9,
+          1,
+          0
+        ],
+        [
+          3,
+          11,
+          6
+        ],
+        [
+          0,
+          0,
+          11
+        ]
+      ],
+      "under_routing_rate": 0.07317073170731707,
+      "severe_under_routing": 0,
+      "over_routing_rate": 0.17073170731707318
+    },
+    "test_errors": [
+      {
+        "candidate_id": "c0179",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.648,
+        "prompt_preview": "Draft an e-mail to a resort inquiring about information regarding a vow renewal celebration for my wife and me."
+      },
+      {
+        "candidate_id": "c0099",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.567,
+        "prompt_preview": "What is it like to have children and how many should I have?"
+      },
+      {
+        "candidate_id": "c0210",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.5,
+        "prompt_preview": "Extract the list of players mentioned in the text. Separate them with a comma. Context: Meanwhile, in the cabin, goalkee"
+      },
+      {
+        "candidate_id": "c0214",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.552,
+        "prompt_preview": "Provide a short, bulleted summary of what historians consider the cause of the War of 1812 Context: Since the conclusion"
+      },
+      {
+        "candidate_id": "c0069",
+        "true_tier": 2,
+        "predicted_tier": 1,
+        "confidence": 0.399,
+        "prompt_preview": "Extract the names of the original songs Sandler performed on Saturday Night Live and list them in bullet format. Context"
+      },
+      {
+        "candidate_id": "c0103",
+        "true_tier": 1,
+        "predicted_tier": 2,
+        "confidence": 0.365,
+        "prompt_preview": "Correct the typos and grammar in this passage Context: Driven to investigate teh explained disappearance of her father, "
+      },
+      {
+        "candidate_id": "c0042",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.502,
+        "prompt_preview": "At what age should I get a shingles vaccine?"
+      },
+      {
+        "candidate_id": "c0004",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.434,
+        "prompt_preview": "Is organic food healthier?"
+      },
+      {
+        "candidate_id": "c0166",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.65,
+        "prompt_preview": "Think of a bunch of ways that you could clean a house."
+      },
+      {
+        "candidate_id": "c0030",
+        "true_tier": 2,
+        "predicted_tier": 3,
+        "confidence": 0.455,
+        "prompt_preview": "Give me some strategies for charity fundraising"
+      }
+    ],
+    "test_other_models": {
+      "logistic_regression+tfidf_hc": {
+        "n": 41,
+        "accuracy": 0.8048780487804879,
+        "macro_f1": 0.8143425202248732,
+        "per_tier": {
+          "1": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "support": 10
+          },
+          "2": {
+            "precision": 0.9285714285714286,
+            "recall": 0.65,
+            "f1": 0.7647058823529411,
+            "support": 20
+          },
+          "3": {
+            "precision": 0.6666666666666666,
+            "recall": 0.9090909090909091,
+            "f1": 0.7692307692307693,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            10,
+            0,
+            0
+          ],
+          [
+            2,
+            13,
+            5
+          ],
+          [
+            0,
+            1,
+            10
+          ]
+        ],
+        "under_routing_rate": 0.07317073170731707,
+        "severe_under_routing": 0,
+        "over_routing_rate": 0.12195121951219512
+      },
+      "logistic_regression+embed_hc": {
+        "n": 41,
+        "accuracy": 0.7560975609756098,
+        "macro_f1": 0.7596963423050379,
+        "per_tier": {
+          "1": {
+            "precision": 0.7692307692307693,
+            "recall": 1.0,
+            "f1": 0.8695652173913043,
+            "support": 10
+          },
+          "2": {
+            "precision": 0.8666666666666667,
+            "recall": 0.65,
+            "f1": 0.7428571428571429,
+            "support": 20
+          },
+          "3": {
+            "precision": 0.6153846153846154,
+            "recall": 0.7272727272727273,
+            "f1": 0.6666666666666666,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            10,
+            0,
+            0
+          ],
+          [
+            2,
+            13,
+            5
+          ],
+          [
+            1,
+            2,
+            8
+          ]
+        ],
+        "under_routing_rate": 0.12195121951219512,
+        "severe_under_routing": 1,
+        "over_routing_rate": 0.12195121951219512
+      },
+      "random_forest+embed_hc": {
+        "n": 41,
+        "accuracy": 0.7317073170731707,
+        "macro_f1": 0.7261904761904763,
+        "per_tier": {
+          "1": {
+            "precision": 0.8181818181818182,
+            "recall": 0.9,
+            "f1": 0.8571428571428571,
+            "support": 10
+          },
+          "2": {
+            "precision": 0.75,
+            "recall": 0.75,
+            "f1": 0.75,
+            "support": 20
+          },
+          "3": {
+            "precision": 0.6,
+            "recall": 0.5454545454545454,
+            "f1": 0.5714285714285714,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            9,
+            1,
+            0
+          ],
+          [
+            1,
+            15,
+            4
+          ],
+          [
+            1,
+            4,
+            6
+          ]
+        ],
+        "under_routing_rate": 0.14634146341463414,
+        "severe_under_routing": 1,
+        "over_routing_rate": 0.12195121951219512
+      },
+      "logistic_regression+embed_hc_tfidf": {
+        "n": 41,
+        "accuracy": 0.8048780487804879,
+        "macro_f1": 0.8156695156695157,
+        "per_tier": {
+          "1": {
+            "precision": 0.9,
+            "recall": 0.9,
+            "f1": 0.9,
+            "support": 10
+          },
+          "2": {
+            "precision": 0.875,
+            "recall": 0.7,
+            "f1": 0.7777777777777778,
+            "support": 20
+          },
+          "3": {
+            "precision": 0.6666666666666666,
+            "recall": 0.9090909090909091,
+            "f1": 0.7692307692307693,
+            "support": 11
+          }
+        },
+        "confusion_matrix": [
+          [
+            9,
+            1,
+            0
+          ],
+          [
+            1,
+            14,
+            5
+          ],
+          [
+            0,
+            1,
+            10
+          ]
+        ],
+        "under_routing_rate": 0.04878048780487805,
+        "severe_under_routing": 0,
+        "over_routing_rate": 0.14634146341463414
+      }
+    },
+    "threshold_table": [
+      {
+        "threshold": 0.0,
+        "routed_up_rate": 0.0,
+        "accuracy": 0.75,
+        "under_routing_rate": 0.18269230769230768,
+        "over_routing_rate": 0.0673076923076923,
+        "tier3_recall": 0.7105263157894737,
+        "tier_share": {
+          "1": 0.28365384615384615,
+          "2": 0.5384615384615384,
+          "3": 0.1778846153846154
+        }
+      },
+      {
+        "threshold": 0.4,
+        "routed_up_rate": 0.016826923076923076,
+        "accuracy": 0.75,
+        "under_routing_rate": 0.1778846153846154,
+        "over_routing_rate": 0.07211538461538461,
+        "tier3_recall": 0.7236842105263158,
+        "tier_share": {
+          "1": 0.2764423076923077,
+          "2": 0.5360576923076923,
+          "3": 0.1875
+        }
+      },
+      {
+        "threshold": 0.45,
+        "routed_up_rate": 0.04807692307692308,
+        "accuracy": 0.7475961538461539,
+        "under_routing_rate": 0.1658653846153846,
+        "over_routing_rate": 0.08653846153846154,
+        "tier3_recall": 0.75,
+        "tier_share": {
+          "1": 0.2668269230769231,
+          "2": 0.5240384615384616,
+          "3": 0.2091346153846154
+        }
+      },
+      {
+        "threshold": 0.5,
+        "routed_up_rate": 0.11298076923076923,
+        "accuracy": 0.7283653846153846,
+        "under_routing_rate": 0.14423076923076922,
+        "over_routing_rate": 0.12740384615384615,
+        "tier3_recall": 0.7894736842105263,
+        "tier_share": {
+          "1": 0.23557692307692307,
+          "2": 0.5216346153846154,
+          "3": 0.24278846153846154
+        }
+      },
+      {
+        "threshold": 0.55,
+        "routed_up_rate": 0.20432692307692307,
+        "accuracy": 0.6754807692307693,
+        "under_routing_rate": 0.12740384615384615,
+        "over_routing_rate": 0.1971153846153846,
+        "tier3_recall": 0.7894736842105263,
+        "tier_share": {
+          "1": 0.20432692307692307,
+          "2": 0.49278846153846156,
+          "3": 0.30288461538461536
+        }
+      },
+      {
+        "threshold": 0.6,
+        "routed_up_rate": 0.28365384615384615,
+        "accuracy": 0.6346153846153846,
+        "under_routing_rate": 0.11298076923076923,
+        "over_routing_rate": 0.25240384615384615,
+        "tier3_recall": 0.8157894736842105,
+        "tier_share": {
+          "1": 0.1778846153846154,
+          "2": 0.46634615384615385,
+          "3": 0.3557692307692308
+        }
+      },
+      {
+        "threshold": 0.65,
+        "routed_up_rate": 0.4206730769230769,
+        "accuracy": 0.5673076923076923,
+        "under_routing_rate": 0.07932692307692307,
+        "over_routing_rate": 0.35336538461538464,
+        "tier3_recall": 0.8157894736842105,
+        "tier_share": {
+          "1": 0.1201923076923077,
+          "2": 0.44471153846153844,
+          "3": 0.43509615384615385
+        }
+      },
+      {
+        "threshold": 0.7,
+        "routed_up_rate": 0.5192307692307693,
+        "accuracy": 0.5072115384615384,
+        "under_routing_rate": 0.0625,
+        "over_routing_rate": 0.43028846153846156,
+        "tier3_recall": 0.8157894736842105,
+        "tier_share": {
+          "1": 0.07451923076923077,
+          "2": 0.4375,
+          "3": 0.4879807692307692
+        }
+      }
+    ],
+    "task_type_test_accuracy": 0.6585365853658537,
+    "top_features": {
+      "1": [
+        [
+          "hc:has_context",
+          1.311
+        ],
+        [
+          "tfidf:which of",
+          1.106
+        ],
+        [
+          "tfidf:the following",
+          0.819
+        ],
+        [
+          "tfidf:following",
+          0.807
+        ],
+        [
+          "tfidf:girl",
+          0.789
+        ],
+        [
+          "tfidf:was",
+          0.771
+        ],
+        [
+          "hc:log_tokens_total",
+          0.605
+        ],
+        [
+          "tfidf:which",
+          0.555
+        ]
+      ],
+      "2": [
+        [
+          "tfidf:in",
+          1.005
+        ],
+        [
+          "tfidf:what",
+          1.0
+        ],
+        [
+          "tfidf:poem",
+          0.605
+        ],
+        [
+          "tfidf:best",
+          0.59
+        ],
+        [
+          "tfidf:is the",
+          0.5
+        ],
+        [
+          "tfidf:city",
+          0.464
+        ],
+        [
+          "tfidf:he",
+          0.461
+        ],
+        [
+          "tfidf:give me",
+          0.441
+        ]
+      ],
+      "3": [
+        [
+          "tfidf:why",
+          1.013
+        ],
+        [
+          "tfidf:and",
+          0.925
+        ],
+        [
+          "tfidf:advantages",
+          0.925
+        ],
+        [
+          "tfidf:how",
+          0.901
+        ],
+        [
+          "tfidf:my",
+          0.788
+        ],
+        [
+          "tfidf:much",
+          0.685
+        ],
+        [
+          "tfidf:how much",
+          0.685
+        ],
+        [
+          "tfidf:you",
+          0.684
+        ]
+      ]
+    },
+    "training_size": 416,
+    "test_size": 41,
+    "tier_counts_train": {
+      "1": 66,
+      "2": 274,
+      "3": 76
+    },
+    "split_created": false,
+    "test_ids_missing": [
+      "c0067",
+      "c0086"
+    ]
+  }
+}
